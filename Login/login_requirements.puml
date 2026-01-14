@@ -1,4 +1,5 @@
-@startuml
+@startuml login_requirements
+allow_mixing
 package "Requirements Login" {
   usecase "Iniciar Sesión" as Login <<processing>>
   usecase "Recuperar Contraseña" as Recover <<processing>>
@@ -8,10 +9,51 @@ package "Requirements Login" {
 }
 
 package "Activity Login" {
-
+  class "LoginForm" as AL_Form <<displayAction>> {
+    {type=form}
+    email
+    password
+  }
+  
+  class "CredentialInput" as AL_Input <<userAction>> {
+    email
+    password
+  }
+  
+  class "ValidateSession" as AL_Process <<systemAction>> {
+    {confirmed}
+  }
+  
+  AL_Form --> AL_Input : submit
+  AL_Input --> AL_Process : validate
 }
-package "Activity Reset Password" {
 
+package "Activity Reset Password" {
+  class "RecoveryForm" as AR_Form <<displayAction>> {
+    {type=form}
+    email
+  }
+  
+  class "EmailInput" as AR_Input <<userAction>> {
+    email
+  }
+  
+  class "ValidateEmail" as AR_ValEmail <<systemAction>> {
+    token
+  }
+  
+  class "TokenInput" as AR_Token <<userAction>> {
+    receivedToken
+  }
+  
+  class "ChangePassword" as AR_Change <<systemAction>> {
+    newPassword
+  }
+  
+  AR_Form --> AR_Input
+  AR_Input --> AR_ValEmail : check
+  AR_ValEmail --> AR_Token : success
+  AR_Token --> AR_Change : update
 }
 
 User --> Login
