@@ -64,6 +64,7 @@ package "Activity Reset Password" {
   class "RecoveryForm" as AR_Form <<displayAction>> {
     {type=form}
     --
+    <<interactionPin>>
     + email
   }
   

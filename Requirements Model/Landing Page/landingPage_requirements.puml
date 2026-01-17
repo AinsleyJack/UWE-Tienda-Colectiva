@@ -37,36 +37,43 @@ package "Activity Browse Shop" {
   circle " " as BS_End <<end>>
   skinparam circleBackgroundColor black
 
-  class "CatalogList" as BS_List <<displayAction>> {
+  class "Lista de Tiendas" as BS_List <<displayAction>> {
     {type=list}
     --
-    + shops
+    <<displayPin>>
+    + nombreTienda
+    + fotoPortada
   }
   
-  class "SelectShop" as BS_Select <<userAction>> {
+  class "Seleccionar Tienda" as BS_Select <<userAction>> {
     --
     + selectedShopId
   }
   
-  class "ShopPage" as BS_Page <<displayAction>> {
+  class "Página de Tienda" as BS_Page <<displayAction>> {
     --
-    + brands
-    + availability
-    + generalInfo
-    + productCatalog {type=list}
+    <<displayPin>>
+    + nombre
+    + foto {type=image}
+    + telefono
+    + direccion
+    + numeroNegocios
+    + listaNegocios {nombre, foto, numProductos}
+    + catalogoProductos {type=list}
   }
   
-  class "SelectProduct" as BS_SelectProd <<userAction>> {
+  class "Seleccionar Producto" as BS_SelectProd <<userAction>> {
     --
     + selectedProductId
   }
   
-  class "ProductDetail" as BS_ProdDetail <<displayAction>> {
+  class "Detalle de Producto" as BS_ProdDetail <<displayAction>> {
     --
-    + productName
-    + description
-    + price
-    + images
+    <<displayPin>>
+    + nombreProducto
+    + precio
+    + foto {type=image}
+    + cantidad
   }
 
   BS_Start --> BS_List
@@ -81,26 +88,31 @@ package "Activity Search Product" {
   circle " " as SP_Start <<start>>
   circle " " as SP_End <<end>>
 
-  class "SearchInput" as SP_Form <<displayAction>> {
+  class "Barra de Búsqueda" as SP_Form <<displayAction>> {
     {type=form}
     --
-    + keyword
+    <<interactionPin>>
+    + nombreProductoinput
   }
   
-  class "EnterKeyword" as SP_Input <<userAction>> {
+  class "Ingresar nombre del producto" as SP_Input <<userAction>> {
     --
-    + keyword
+    + nombreProductoinput
   }
   
-  class "ExecuteFilter" as SP_Filter <<systemAction>> {
+  class "Filtrar productos" as SP_Filter <<systemAction>> {
     {filtered}
   }
   
-  class "GlobalResultList" as SP_Results <<displayAction>> {
+  class "Lista de Resultados" as SP_Results <<displayAction>> {
     {type=list}
     --
-    + products
-    + shopOrigin
+    <<displayPin>>
+    + nombreProducto
+    + precio
+    + foto {type=image}
+    + nombreNegocio
+    + nombreTienda
   }
   
   SP_Start --> SP_Form
