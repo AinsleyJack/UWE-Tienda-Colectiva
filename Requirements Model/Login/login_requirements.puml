@@ -20,7 +20,7 @@ package "Requirements Login" {
   usecase "Recuperar Contraseña" as Recover <<processing>>
   usecase "Ver Dashboard" as ViewDash <<browsing>>
   
-  actor "Usuario" as User
+  actor "Usuario Administrador" as User
 }
 
 User --> Login

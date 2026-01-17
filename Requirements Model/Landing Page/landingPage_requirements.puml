@@ -1,0 +1,103 @@
+@startuml landingPage_requirements
+allow_mixing
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Requirements Landing Page" {
+  actor "Usuario Anónimo" as AnonUser
+  
+  usecase "Ver Catálogo Tiendas" as ViewCatalog <<browsing>>
+  usecase "Ver Detalle Tienda" as ViewShop <<browsing>>
+  usecase "Ver Productos Tienda" as ViewShopProducts <<browsing>>
+  usecase "Buscar Productos (Global)" as SearchGlobal <<browsing>>
+  usecase "Ir a Login" as GoLogin <<navigation>>
+}
+
+AnonUser --> ViewCatalog
+AnonUser --> SearchGlobal
+AnonUser --> GoLogin
+
+ViewCatalog ..> ViewShop : <<include>>
+ViewShop ..> ViewShopProducts : <<include>>
+
+package "Activity Browse Shop" {
+  circle " " as BS_Start <<start>>
+  circle " " as BS_End <<end>>
+  skinparam circleBackgroundColor black
+
+  class "CatalogList" as BS_List <<displayAction>> {
+    {type=list}
+    --
+    + shops
+  }
+  
+  class "SelectShop" as BS_Select <<userAction>> {
+    --
+    + selectedShopId
+  }
+  
+  class "ShopDetail" as BS_Detail <<displayAction>> {
+    --
+    + brands
+    + availability
+    + generalInfo
+  }
+  
+  class "ProductList" as BS_Prods <<displayAction>> {
+    {type=list}
+    --
+    + products
+  }
+
+  BS_Start --> BS_List
+  BS_List --> BS_Select : click shop
+  BS_Select --> BS_Detail : view
+  BS_Detail --> BS_Prods : view products
+  BS_Prods --> BS_End
+}
+
+package "Activity Search Product" {
+  circle " " as SP_Start <<start>>
+  circle " " as SP_End <<end>>
+
+  class "SearchInput" as SP_Form <<displayAction>> {
+    {type=form}
+    --
+    + keyword
+  }
+  
+  class "EnterKeyword" as SP_Input <<userAction>> {
+    --
+    + keyword
+  }
+  
+  class "ExecuteFilter" as SP_Filter <<systemAction>> {
+    {filtered}
+  }
+  
+  class "GlobalResultList" as SP_Results <<displayAction>> {
+    {type=list}
+    --
+    + products
+    + shopOrigin
+  }
+  
+  SP_Start --> SP_Form
+  SP_Form --> SP_Input : type
+  SP_Input --> SP_Filter : search
+  SP_Filter --> SP_Results : display
+  SP_Results --> SP_End
+}
+@enduml
