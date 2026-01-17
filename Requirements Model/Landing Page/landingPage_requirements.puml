@@ -48,24 +48,33 @@ package "Activity Browse Shop" {
     + selectedShopId
   }
   
-  class "ShopDetail" as BS_Detail <<displayAction>> {
+  class "ShopPage" as BS_Page <<displayAction>> {
     --
     + brands
     + availability
     + generalInfo
+    + productCatalog {type=list}
   }
   
-  class "ProductList" as BS_Prods <<displayAction>> {
-    {type=list}
+  class "SelectProduct" as BS_SelectProd <<userAction>> {
     --
-    + products
+    + selectedProductId
+  }
+  
+  class "ProductDetail" as BS_ProdDetail <<displayAction>> {
+    --
+    + productName
+    + description
+    + price
+    + images
   }
 
   BS_Start --> BS_List
   BS_List --> BS_Select : click shop
-  BS_Select --> BS_Detail : view
-  BS_Detail --> BS_Prods : view products
-  BS_Prods --> BS_End
+  BS_Select --> BS_Page : display
+  BS_Page --> BS_SelectProd : click product
+  BS_SelectProd --> BS_ProdDetail : view
+  BS_ProdDetail --> BS_End
 }
 
 package "Activity Search Product" {
