@@ -1,5 +1,15 @@
-@startuml
-package "Navigation" {
+@startuml login_navigation
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navigation Login" {
   class "Home" as Home <<navigationClass>> {
     {tag=isHome}
   }
@@ -16,7 +26,7 @@ package "Navigation" {
   Menu --> LoginForm : <<navigationLink>>
   LoginForm --> Dashboard : <<navigationLink>>
   
-  ' Flujos de Error y Recuperación (Solicitados)
+  ' Flujos de Error y Recuperación
   LoginForm --> LoginError : <<navigationLink>> (Error)
   LoginError --> LoginForm : <<navigationLink>> (Reintentar)
   

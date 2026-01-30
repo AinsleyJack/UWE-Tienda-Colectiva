@@ -1,5 +1,15 @@
-@startuml
-package "Navigation" {
+@startuml reset_navigation
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navigation ResetPassword" {
   class "LoginForm" as Login <<navigationClass>>
   class "RecoverPage" as Recover <<navigationClass>>
   class "TokenInputPage" as TokenPage <<navigationClass>>

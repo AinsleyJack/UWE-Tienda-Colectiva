@@ -1,4 +1,4 @@
-@startuml login_content
+@startuml reset_content
 
 skinparam shadow false
 skinparam packageStyle rectangle
@@ -9,33 +9,20 @@ skinparam class {
   ArrowColor #A80036
 }
 
-package "Content Login" {
+package "Content ResetPassword" {
   class Usuario <<content>> {
     - email : String
-    - password : String
-    - nombreComplete : String
-    - rol : String
-    + validarCredenciales() : Boolean
+    + generarToken() : RecoveryToken
+    + cambiarPassword(newPass: String) : void
   }
 
-  class Sesion <<content>> {
-    - token : String
-    - fechaExp : Date
-  }
-  
   class RecoveryToken <<content>> {
-    - email : String
     - codigo : String
     - fechaExpiracion : Date
     - usado : Boolean
-  }
-  
-  class ErrorMessage <<content>> {
-    - codigo : String
-    - description : String
+    + esValido() : Boolean
   }
 
-  Usuario "1" -- "0..1" Sesion : mantiene >
   Usuario "1" -- "0..*" RecoveryToken : solicita >
 }
 @enduml

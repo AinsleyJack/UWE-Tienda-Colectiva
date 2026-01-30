@@ -1,0 +1,36 @@
+@startuml adminPage_content
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Content Admin Page" {
+  class Administrador <<content>> {
+    - id : Integer
+    - nombre : String
+  }
+
+  class TiendaColectiva <<content>> {
+    - nombre : String
+    - fotoPortada : Image
+    - telefono : String
+    - direccion : String
+    - estadoEspacio : Boolean
+  }
+  
+  class Producto <<content>> {
+    - nombre : String
+    - precio : Decimal
+    - foto : Image
+    - cantidad : Integer
+  }
+  
+  Administrador "1" -- "0..1" TiendaColectiva : gestiona >
+  TiendaColectiva "1" *-- "0..*" Producto : inventario >
+}
+@enduml

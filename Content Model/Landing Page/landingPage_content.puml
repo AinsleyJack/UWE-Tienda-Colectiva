@@ -1,0 +1,38 @@
+@startuml landingPage_content
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Content Landing Page" {
+  class TiendaColectiva <<content>> {
+    - nombre : String
+    - fotoPortada : Image
+    - telefono : String
+    - direccion : String
+    - numeroNegocios : Integer
+  }
+  
+  class Negocio <<content>> {
+    - nombre : String
+    - foto : Image
+    - numProductos : Integer
+  }
+  
+  class Producto <<content>> {
+    - nombreProducto : String
+    - precio : Decimal
+    - foto : Image
+    - cantidad : Integer
+    - description : String
+  }
+  
+  TiendaColectiva "1" *-- "0..*" Negocio : alberga >
+  Negocio "1" *-- "0..*" Producto : vende >
+}
+@enduml
