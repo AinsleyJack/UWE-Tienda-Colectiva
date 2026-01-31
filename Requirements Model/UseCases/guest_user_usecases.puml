@@ -2,7 +2,6 @@
 allow_mixing
 
 skinparam shadow false
-
 skinparam roundCorner 15
 skinparam class {
   BackgroundColor #FEFECE
@@ -17,37 +16,63 @@ skinparam usecase {
 
 actor "Usuario Invitado" as AnonUser
 
-  usecase "Establecer Ubicación" as SetLocation <<processing>>
-  usecase "Ver Catálogo Tiendas" as ViewCatalog <<browsing>>
-  usecase "Ver Detalle Tienda" as ViewShop <<browsing>>
-  usecase "Ver Productos Tienda" as ViewShopProducts <<browsing>>
-  usecase "Buscar Productos (Global)" as SearchGlobal <<browsing>>
-  usecase "Ver Detalle de Producto" as ViewProductDetail <<browsing>>
-  usecase "Guardar Productos de Interés" as SaveFavoriteProducts <<processing>>
-  usecase "Ver Productos de Interes" as ViewFavoriteProducts <<browsing>>
-  usecase "Ver Producto más vendido" as ViewMostSoldProducts <<browsing>>
+' 1. Selección de ubicación
+usecase "Selección de Ubicación" as SelectLocation <<processing>>
 
-  usecase "Ir a Login" as GoLogin <<processing>>
-  usecase "Registrarse" as register <<processing>>
+' a. Ir a login -> i. Registrarse
+usecase "Ir a Login" as GoToLogin <<browsing>>
+usecase "Registrarse" as Register <<processing>>
 
-AnonUser --> SetLocation
-AnonUser --> ViewCatalog
-AnonUser --> SearchGlobal
-AnonUser --> GoLogin
-AnonUser --> register
-AnonUser --> ViewProductDetail
-AnonUser --> SaveFavoriteProducts
-AnonUser --> ViewFavoriteProducts
-AnonUser --> ViewMostSoldProducts
+' b, d, e. Flujos que llevan a Lista de Productos
+usecase "Ver Productos Más Vendidos" as ViewMostSold <<browsing>>
+usecase "Buscar Producto" as SearchProduct <<browsing>>
+usecase "Producto de Interés" as InterestProduct <<browsing>>
+usecase "Ver Lista Tienda" as ViewStoreList <<browsing>>
 
-'TODO: Discuss with others
-SetLocation <.. ViewCatalog : <<iSnclude>>
-SetLocation <.. SearchGlobal : <<include>>
+' Sub-casos reutilizables
+usecase "Ver Lista Producto" as ViewProductList <<browsing>>
+usecase "Ver Detalle Producto" as ViewProductDetail <<browsing>>
+usecase "Guardar Producto de Interés" as SaveInterestProduct <<processing>>
 
-ViewProductDetail <.. SaveFavoriteProducts : <<extends>>
-GoLogin <.. register : <<extends>>
-ViewShopProducts <.. ViewProductDetail : <<extends>>
-SearchGlobal <.. ViewProductDetail : <<extends>>
-ViewCatalog ..> ViewShop : <<include>>
-ViewShop ..> ViewShopProducts : <<include>>
+usecase "Ver Detalle Tienda" as ViewStoreDetail <<browsing>>
+usecase "Ver Lista de Espacios Disponibles" as ViewSpaceList <<browsing>>
+usecase "Ver Detalle de Espacios Disponibles" as ViewSpaceDetail <<browsing>>
+
+' Relaciones
+
+' 1. Ubicación
+AnonUser --> SelectLocation
+
+' a. Login
+AnonUser --> GoToLogin
+Register .> GoToLogin : <<extends>>
+' Nota: Registrarse extiende la funcionalidad de Login (opción adicional)
+
+' b. Producto más vendido -> Lista -> Detalle -> Guardar
+AnonUser --> ViewMostSold
+ViewMostSold ..> ViewProductList : <<include>>
+ViewProductList ..> ViewProductDetail : <<include>>
+SaveInterestProduct .> ViewProductDetail : <<extends>>
+
+' c. Buscar producto -> Detalle -> Guardar
+AnonUser --> SearchProduct
+SearchProduct ..> ViewProductDetail : <<include>>
+' Nota: Buscar puede llevar directo o vía lista, simplificado a detalle según jerarquía del usuario
+
+' d. Producto de interés -> Lista -> Detalle -> Guardar
+AnonUser --> InterestProduct
+InterestProduct ..> ViewProductList : <<include>>
+' (Conecta con flujo existente de Lista -> Detalle -> Guardar)
+
+' e. Ver lista tienda -> Detalle tienda -> Espacios / Lista Productos
+AnonUser --> ViewStoreList
+ViewStoreList ..> ViewStoreDetail : <<include>>
+
+' Detalle tienda tiene dos ramas:
+ViewStoreDetail ..> ViewSpaceList : <<include>>
+ViewStoreDetail ..> ViewProductList : <<include>>
+
+' Rama Espacios
+ViewSpaceList ..> ViewSpaceDetail : <<include>>
+
 @enduml
