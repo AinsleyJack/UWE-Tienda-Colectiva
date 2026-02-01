@@ -10,7 +10,28 @@ skinparam class {
 }
 skinparam circleBackgroundColor black
 
-' 1. Selección de Ubicación
+' ==========================================
+' MODELO DE REQUISITOS (UWE) - DIAGRAMAS DE ACTIVIDAD
+' ==========================================
+' Este diagrama modela el flujo de trabajo para las actividades del usuario invitado.
+' Se utiliza la sintaxis de clases de PlantUML para representar las acciones UWE.
+'
+' Stereotypes utilizados:
+' <<systemAction>>  : Acción realizada por el sistema (procesamiento interno).
+' <<userAction>>    : Acción realizada por el usuario (entrada de datos, clic).
+' <<displayAction>> : Acción de mostrar información o formularios en la interfaz.
+'
+' Pins (Atributos):
+' <<interactionPin>> : Datos de entrada requeridos por el usuario.
+' <<displayPin>>     : Datos mostrados al usuario.
+'
+' Tagged Values:
+' {type=form} : Indica que la acción de visualización es un formulario.
+' {type=list} : Indica que la acción de visualización es una lista.
+
+' ------------------------------------------
+' 1. SELECCIÓN DE UBICACIÓN
+' ------------------------------------------
 package "Activity Selección de Ubicación" {
   circle " " as Loc_Start <<start>>
   circle " " as Loc_End <<end>>
@@ -39,7 +60,9 @@ package "Activity Selección de Ubicación" {
   Loc_Select --> Loc_End
 }
 
-' 2. Login
+' ------------------------------------------
+' 2. LOGIN DE INVITADO
+' ------------------------------------------
 package "Activity Login Invitado" {
   circle " " as Log_Start <<start>>
   circle " " as Log_End <<end>>
@@ -74,6 +97,9 @@ package "Activity Login Invitado" {
   Log_Validate --> Log_Form : Error
 }
 
+' ------------------------------------------
+' 3. REGISTRO DE INVITADO
+' ------------------------------------------
 package "Activity Registro Invitado" {
   circle " " as Reg_Start <<start>>
   circle " " as Reg_End <<end>>
@@ -102,7 +128,9 @@ package "Activity Registro Invitado" {
   Reg_Action --> Reg_Form : [invalid]
 }
 
-' 3. Listar Productos Más Vendidos
+' ------------------------------------------
+' 4. LISTAR PRODUCTOS MÁS VENDIDOS
+' ------------------------------------------
 package "Activity Listar Productos Más Vendidos" {
   circle " " as Prod_Start <<start>>
   circle " " as Prod_End <<end>>
@@ -146,7 +174,9 @@ package "Activity Listar Productos Más Vendidos" {
   Prod_Detail --> Prod_End : back/exit
 }
 
-' Listar Productos de Interés
+' ------------------------------------------
+' 5. LISTAR PRODUCTOS DE INTERÉS
+' ------------------------------------------
 package "Activity Listar Productos de Interés" {
   circle " " as Interest_Start <<start>>
   circle " " as Interest_End <<end>>
@@ -190,7 +220,9 @@ package "Activity Listar Productos de Interés" {
   Interest_Detail --> Interest_End : back/exit
 }
 
-' 4. Ver Lista Tienda (Tiendas -> Espacios/Productos)
+' ------------------------------------------
+' 6. VER LISTA DE TIENDA
+' ------------------------------------------
 package "Activity Ver Lista Tienda" {
   circle " " as Shop_Start <<start>>
   circle " " as Shop_End <<end>>
@@ -228,7 +260,7 @@ package "Activity Ver Lista Tienda" {
   ' Ramificación
   Shop_Detail --> Space_Summary : ver espacios
   
-  ' Rama Productos
+  ' Rama Productos (Reuse struct)
   class "Lista Producto" as Shop_Prod_List <<displayAction>> {
     {type=list}
     --
@@ -270,7 +302,9 @@ package "Activity Ver Lista Tienda" {
   Space_Summary --> Shop_End
 }
 
-' 5. Buscar Producto
+' ------------------------------------------
+' 7. BUSCAR PRODUCTO
+' ------------------------------------------
 package "Activity Buscar Producto" {
   circle " " as Search_Start <<start>>
   circle " " as Search_End <<end>>

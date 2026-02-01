@@ -1,4 +1,4 @@
-@startuml
+@startuml guest_user_usecases
 allow_mixing
 
 skinparam shadow false
@@ -16,47 +16,68 @@ skinparam usecase {
 
 actor "Usuario Invitado" as AnonUser
 
-' 1. Selección de ubicación
+' ==========================================
+' MODELO DE REQUISITOS (UWE) - CASOS DE USO
+' ==========================================
+' Stereotypes utilizados:
+' <<browsing>>   : Casos de uso de navegación (visualización de información).
+' <<processing>> : Casos de uso de proceso (lógica de negocio o cambio de estado).
+
+' ------------------------------------------
+' 1. GESTIÓN DE UBICACIÓN
+' ------------------------------------------
 usecase "Selección de Ubicación" as SelectLocation <<processing>>
 
-' a. Ir a login -> i. Registrarse
+' ------------------------------------------
+' 2. GESTIÓN DE ACCESO
+' ------------------------------------------
 usecase "Ir a Login" as GoToLogin <<browsing>>
 usecase "Registrarse" as Register <<processing>>
+usecase "Recuperar contraseña" as Recover<<processing>>
 
-' b, d, e. Flujos que llevan a Lista de Productos
+' ------------------------------------------
+' 3. NAVEGACIÓN Y BÚSQUEDA DE PRODUCTOS
+' ------------------------------------------
 usecase "Listar Productos Más Vendidos" as ViewMostSold <<browsing>>
 usecase "Buscar Producto" as SearchProduct <<browsing>>
 usecase "Listar Productos de Interés" as InterestProduct <<browsing>>
-usecase "Ver Lista Tienda" as ViewStoreList <<browsing>>
 
-' Sub-casos reutilizables
+' ------------------------------------------
+' 4. NAVEGACIÓN POR TIENDAS
+' ------------------------------------------
+usecase "Ver Lista Tienda" as ViewStoreList <<browsing>>
+usecase "Ver Detalle Tienda" as ViewStoreDetail <<browsing>>
+usecase "Ver Resumen de Espacios Disponibles" as ViewSpaceList <<browsing>>
+
+' ------------------------------------------
+' 5. SUB-CASOS DE USO (REUTILIZABLES)
+' ------------------------------------------
 usecase "Ver Lista Producto" as ViewProductList <<browsing>>
 usecase "Ver Detalle Producto" as ViewProductDetail <<browsing>>
 usecase "Guardar Producto Interes" as SaveInterestProduct <<processing>>
 usecase "Eliminar Producto Interes" as DeleteInterestProduct <<processing>>
 
-usecase "Ver Detalle Tienda" as ViewStoreDetail <<browsing>>
-usecase "Ver Resumen de Espacios Disponibles" as ViewSpaceList <<browsing>>
-usecase "Recuperar contraseña" as Recover<<processing>>
 
-' Relaciones
+' ==========================================
+' RELACIONES ENTRE ACTORES Y CASOS DE USO
+' ==========================================
 
 ' 1. Ubicación
 AnonUser --> SelectLocation
 
-' a. Login
+' 2. Login y Registro
 AnonUser --> GoToLogin
 Register .> GoToLogin : <<extends>>
 AnonUser --> Register
-' Nota: Registrarse extiende la funcionalidad de Login (opción adicional)
-
 AnonUser --> Recover
 
-' d. Producto de interés -> Lista -> Guardar
+' 3. Productos de Interés
+' Flujo: Ver Lista -> Ver Detalle (Include) -> Eliminar (Extend)
 AnonUser --> InterestProduct
 InterestProduct ..> ViewProductDetail : <<include>>
 
-' b. Producto más vendido -> Lista -> Detalle -> Guardar
+' 4. Productos Más Vendidos
+' Flujo: Ver Lista -> Ver Detalle (Include) -> Guardar/Eliminar Interés (Extend)
 AnonUser --> ViewMostSold
 ViewMostSold ..> ViewProductDetail : <<include>>
 ViewProductList ..> ViewProductDetail : <<include>>
@@ -64,23 +85,19 @@ SaveInterestProduct .> ViewProductDetail : <<extends>>
 DeleteInterestProduct .> ViewProductDetail : <<extends>>
 
 
-
-
-' c. Buscar producto -> Lista -> Guardar
+' 5. Búsqueda de Productos
+' Flujo: Buscar -> Ver Lista (Include) -> ...
 AnonUser --> SearchProduct
 SearchProduct ..> ViewProductList : <<include>>
 
 
-
-
-' e. Ver lista tienda -> Detalle tienda -> Resumen de Espacios / Lista Productos
+' 6. Tiendas
+' Flujo: Ver Lista Tiendas -> Ver Detalle Tienda (Include) -> Ver Productos/Espacios (Include)
 AnonUser --> ViewStoreList
 ViewStoreList ..> ViewStoreDetail : <<include>>
 
-' Detalle tienda tiene dos ramas:
+' Detalle tienda incluye opciones de navegación adicionales
 ViewStoreDetail ..> ViewSpaceList : <<include>>
 ViewStoreDetail ..> ViewProductList : <<include>>
-
-
 
 @enduml
