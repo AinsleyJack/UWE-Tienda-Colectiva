@@ -39,8 +39,8 @@ package "Activity Selección de Ubicación" {
   Loc_Select --> Loc_End
 }
 
-' 2. Login y Registro
-package "Activity Login y Registro" {
+' 2. Login
+package "Activity Login Invitado" {
   circle " " as Log_Start <<start>>
   circle " " as Log_End <<end>>
 
@@ -50,7 +50,6 @@ package "Activity Login y Registro" {
     <<interactionPin>>
     + email
     + password
-    + botonRegistro
   }
 
   class "Ingresar Credenciales" as Log_Input <<userAction>> {
@@ -61,8 +60,24 @@ package "Activity Login y Registro" {
 
   class "Validar Credenciales" as Log_Validate <<systemAction>> {
     --
-    + esValido
+    + {confirmed}
   }
+
+  class "Crear sesión" as Log_Session <<systemAction>>
+
+  Log_Start --> Log_Form
+  Log_Form --> Log_Input : submit
+  
+  Log_Input --> Log_Validate:validate
+  Log_Validate --> Log_Session : success
+  Log_Session --> Log_End
+  Log_Validate --> Log_Form : Error
+}
+
+package "Activity Registro Invitado" {
+  circle " " as Reg_Start <<start>>
+  circle " " as Reg_End <<end>>
+
 
   class "Formulario Registro" as Reg_Form <<displayAction>> {
     {type=form}
@@ -79,16 +94,11 @@ package "Activity Login y Registro" {
     + datosUsuario
   }
 
-  Log_Start --> Log_Form
-  Log_Form --> Log_Input : login
-  Log_Form --> Reg_Form : register
-  
-  Log_Input --> Log_Validate
-  Log_Validate --> Log_End : [valid]
-  Log_Validate --> Log_Form : [invalid]
-
+  Reg_Start --> Reg_Form
   Reg_Form --> Reg_Action : submit
-  Reg_Action --> Log_End
+  
+  Reg_Action --> Reg_End : [valid]
+  Reg_Action --> Reg_Form : [invalid]
 }
 
 ' 3. Ver Productos (Más Vendidos, Búsqueda, Interés)

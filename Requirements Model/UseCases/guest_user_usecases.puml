@@ -47,6 +47,7 @@ AnonUser --> SelectLocation
 ' a. Login
 AnonUser --> GoToLogin
 Register .> GoToLogin : <<extends>>
+AnonUser --> Register
 ' Nota: Registrarse extiende la funcionalidad de Login (opción adicional)
 
 ' d. Producto de interés -> Lista -> Guardar
