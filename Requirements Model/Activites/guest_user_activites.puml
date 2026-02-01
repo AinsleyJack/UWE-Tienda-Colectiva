@@ -211,7 +211,7 @@ package "Activity Ver Lista Tienda" {
     --
     <<displayPin>>
     + infoTienda
-    + opcionVerProductos
+    + opcionVerListaProductos
     + opcionVerResumenEspaciosDisponibles
   }
 
@@ -228,8 +228,44 @@ package "Activity Ver Lista Tienda" {
   ' Ramificación
   Shop_Detail --> Space_Summary : ver espacios
   
-  ' Nota: La rama de productos conecta conceptualmente con "Navegación de Productos"
-  ' pero aquí se modela la decisión de navegación.
+  ' Rama Productos
+  class "Lista Producto" as Shop_Prod_List <<displayAction>> {
+    {type=list}
+    --
+    <<displayPin>>
+    + listaProductos
+  }
+
+  class "Seleccionar Producto" as Shop_Prod_Select <<userAction>> {
+    --
+    + selectedProductId
+  }
+
+  class "Detalle de Producto" as Shop_Prod_Detail <<displayAction>> {
+    --
+    <<displayPin>>
+    + etiqueta
+    + foto
+    + nombre
+    + descripcion
+    + precio
+    + cantidadExistencia
+    + botonGuardarInteres
+  }
+
+  class "Guardar Producto Interés" as Shop_Prod_Save <<userAction>> {
+    --
+    + productId
+  }
+
+  Shop_Detail --> Shop_Prod_List : ver productos
+  Shop_Prod_List --> Shop_Prod_Select : click
+  Shop_Prod_Select --> Shop_Prod_Detail : view
+  
+  Shop_Prod_Detail --> Shop_Prod_Save : interaction
+  Shop_Prod_Save --> Shop_Prod_Detail : refresh
+  
+  Shop_Prod_Detail --> Shop_End : back/exit
   
   Space_Summary --> Shop_End
 }
