@@ -1,0 +1,137 @@
+@startuml guest_user_navigation_model
+allow_mixing
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+' ==========================================
+' MODELO DE NAVEGACIÓN (UWE) - USUARIO INVITADO
+' ==========================================
+' Este modelo define la estructura de navegación y las rutas de acceso para el usuario invitado.
+'
+' Estereotipos utilizados:
+' <<navigationClass>> : Nodo de navegación principal (representa una vista o página).
+' <<menu>>            : Nodo que ofrece una selección de opciones de navegación.
+' <<index>>           : Nodo que proporciona una lista de elementos (acceso guiado).
+' <<query>>           : Nodo de entrada para realizar búsquedas (implica proceso).
+' <<processClass>>    : Nodo que representa una acción o proceso de negocio (Create, Update, Login).
+' <<navigationLink>>  : Enlace de navegación estándar.
+' <<processLink>>     : Enlace hacia o desde una Query o ProcessClass (unidireccional, implica flujo de control).
+' <<externalLink>>    : Enlace a un proceso o modelo externo.
+
+package "Navegación de Usuario Invitado" {
+
+  ' --- Inicio y Puntos de Entrada ---
+  class "Inicio Invitado" as Home <<navigationClass>> {
+    {tag=isHome}
+  }
+
+  ' --- 1. Gestión de Ubicación ---
+  ' Query se conecta con processLink
+  class "Consulta Ubicación" as LocQuery <<query>>
+  
+  ' --- 2. Acceso / Inicio de Sesión ---
+  class "Menu Acceso" as AccessMenu <<menu>>
+  ' Formularios que implican procesamiento de credenciales son ProcessClasses
+  class "Proceso Login" as Login <<processClass>>
+  class "Proceso Registro" as Register <<processClass>>
+  class "Proceso Recuperación" as Recovery <<processClass>>
+
+  ' --- 3. Productos (Búsqueda y Listas) ---
+  class "Busqueda Productos" as ProdSearch <<query>>
+  class "Lista Productos" as ProdList <<index>>
+  class "Detalle Producto" as ProdDetail <<navigationClass>>
+  
+  ' Menú para acciones en el detalle (simil al ContactMenu del tutorial)
+  class "Menu Producto" as ProdMenu <<menu>>
+  class "Guardar Interés" as SaveInterest <<processClass>>
+  class "Eliminar Interés" as DeleteInterest <<processClass>>
+
+  ' Listas Específicas
+  class "Lista Productos Mas Vendidos" as MostSoldList <<index>>
+  class "Lista Productos Interes" as InterestList <<index>>
+
+  ' --- 4. Tiendas ---
+  class "Lista Tiendas" as StoreList <<index>>
+  class "Detalle Tienda" as StoreDetail <<navigationClass>>
+  
+  ' Menú para acciones de Tienda
+  class "Menu Tienda" as StoreMenu <<menu>>
+  class "Lista Productos Tienda" as StoreProdList <<index>>
+  class "Resumen Espacios Tienda" as SpaceSummary <<navigationClass>>
+
+
+  ' ==========================================
+  ' ENLACES DE NAVEGACIÓN
+  ' ==========================================
+
+  ' 1. Flujo de Ubicación
+  ' Home -> Query (Process Link porque es una búsqueda/input)
+  Home "1" --> "1" LocQuery : <<processLink>>
+  ' Query -> Home (Process Link retorno)
+  LocQuery "1" --> "1" Home : <<processLink>>
+
+  ' 2. Flujo de Acceso
+  Home "1" --> "1" AccessMenu : <<navigationLink>>
+  ' Menú -> Procesos (Process Link)
+  AccessMenu "1" --> "1" Login : <<processLink>>
+  AccessMenu "1" --> "1" Register : <<processLink>>
+  AccessMenu "1" --> "1" Recovery : <<processLink>>
+  
+  ' Procesos -> Inicio (External Link o Process Link de retorno)
+  ' El ejemplo muestra retornos como ProcessLink o flujo natural
+  Login "1" --> "1" Home : <<processLink>>
+  Register "1" --> "1" Home : <<processLink>>
+  Recovery "1" --> "1" AccessMenu : <<processLink>>
+
+
+  ' 3. Flujo de Navegación de Productos
+  ' Inicio -> Query (Search) -> ProcessLink
+  Home "1" --> "1" ProdSearch : <<processLink>>
+  ' Query -> Index (Resultados) -> ProcessLink
+  ProdSearch "1" --> "1" ProdList : <<processLink>>
+  
+  ' Inicio -> Listas Especiales (NavigationLink estándar)
+  Home "1" --> "1" MostSoldList : <<navigationLink>>
+  Home "1" --> "1" InterestList : <<navigationLink>>
+
+  ' Lista -> Detalle
+  ProdList "1" --> "*" ProdDetail : <<navigationLink>>
+  MostSoldList "1" --> "*" ProdDetail : <<navigationLink>>
+  InterestList "1" --> "*" ProdDetail : <<navigationLink>>
+  
+  ' Detalle -> Menú de Acciones (NavigationLink)
+  ProdDetail "1" --> "1" ProdMenu : <<navigationLink>>
+  
+  ' Menú -> Proceso (Guardar/Eliminar Interés) -> ProcessLink
+  ProdMenu "1" --> "1" SaveInterest : <<processLink>>
+  ProdMenu "1" --> "1" DeleteInterest : <<processLink>>
+  
+  ' Proceso -> Vista (Volver al detalle) -> ProcessLink
+  SaveInterest "1" --> "1" ProdDetail : <<processLink>>
+  DeleteInterest "1" --> "1" ProdDetail : <<processLink>>
+  
+  
+  ' 4. Flujo de Navegación de Tiendas
+  Home "1" --> "1" StoreList : <<navigationLink>>
+  StoreList "1" --> "*" StoreDetail : <<navigationLink>>
+  
+  ' Detalle -> Menú Tienda
+  StoreDetail "1" --> "1" StoreMenu : <<navigationLink>>
+  
+  ' Menú Tienda -> Opciones
+  StoreMenu "1" --> "1" StoreProdList : <<navigationLink>>
+  StoreMenu "1" --> "1" SpaceSummary : <<navigationLink>>
+  
+  ' Lista Productos Tienda -> Detalle Producto
+  StoreProdList "1" --> "*" ProdDetail : <<navigationLink>>
+
+}
+
+@enduml
