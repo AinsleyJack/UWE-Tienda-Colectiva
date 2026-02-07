@@ -23,98 +23,98 @@ skinparam rectangle {
 package "Presentation Model" {
 
     ' --- HOME PAGE ---
-    rectangle "HomePage" <<presentationPage>> {
+    rectangle "PaginaInicio" <<presentationPage>> {
         
-        rectangle "Header" <<presentationGroup>> {
-            class ": Introduction" <<text>>
+        rectangle "Encabezado" <<presentationGroup>> {
+            class ": Introduccion" <<text>>
         }
 
-        rectangle ": LocationForm" <<inputForm>> {
-            class ": AddressInput" <<textInput>> {
+        rectangle ": FormularioUbicacion" <<inputForm>> {
+            class ": EntradaDireccion" <<textInput>> {
                {autoCompletion}
             }
-            class ": SearchLocation" <<button>>
+            class ": BuscarUbicacion" <<button>>
         }
 
-        rectangle ": SearchForm" <<inputForm>> {
-            class ": SearchCriterion" <<textInput>>
-            class ": SearchProduct" <<button>>
+        rectangle ": FormularioBusqueda" <<inputForm>> {
+            class ": CriterioBusqueda" <<textInput>>
+            class ": BuscarProducto" <<button>>
         }
 
-        rectangle "AccessMenu" <<presentationGroup>> {
-            class ": Login" <<anchor>>
-            class ": Register" <<anchor>>
+        rectangle "MenuAcceso" <<presentationGroup>> {
+            class ": IniciarSesion" <<anchor>>
+            class ": Registrarse" <<anchor>>
         }
     }
 
     ' --- AUTHENTICATION ---
-    rectangle "LoginPage" <<presentationPage>> {
-        rectangle ": LoginForm" <<inputForm>> {
-            class ": Email" <<textInput>> {
+    rectangle "PaginaLogin" <<presentationPage>> {
+        rectangle ": FormularioLogin" <<inputForm>> {
+            class ": Correo" <<textInput>> {
                 {liveValidation}
             }
-            class ": Password" <<textInput>>
-            class ": SubmitLogin" <<button>>
+            class ": Contrasena" <<textInput>>
+            class ": EnviarLogin" <<button>>
         }
-        note right of ": LoginForm" 
-            Show error if validation fails
+        note right of ": FormularioLogin" 
+            Mostrar error si falla la validación
         end note
     }
 
-    rectangle "RegisterPage" <<presentationPage>> {
-        rectangle ": RegisterForm" <<inputForm>> {
-            class ": Name" <<textInput>>
-            class ": Email" <<textInput>> {
+    rectangle "PaginaRegistro" <<presentationPage>> {
+        rectangle ": FormularioRegistro" <<inputForm>> {
+            class ": Nombre" <<textInput>>
+            class ": Correo" <<textInput>> {
                 {liveValidation}
             }
-            class ": Phone" <<textInput>>
-            class ": Password" <<textInput>>
-            class ": SubmitRegister" <<button>>
+            class ": Telefono" <<textInput>>
+            class ": Contrasena" <<textInput>>
+            class ": EnviarRegistro" <<button>>
         }
     }
 
     ' --- PRODUCT LISTING ---
-    rectangle "ProductListPage" <<presentationPage>> {
+    rectangle "PaginaListaProductos" <<presentationPage>> {
         
-        rectangle ": ProductList" <<presentationGroup>> {
-            rectangle ": Product [*]" <<presentationGroup>> {
-                 class ": ProdImage" <<image>>
-                 class ": ProdName" <<text>>
-                 class ": ProdPrice" <<text>>
-                 class ": Inspect" <<button>>
+        rectangle ": ListaProductos" <<presentationGroup>> {
+            rectangle ": Producto [*]" <<presentationGroup>> {
+                 class ": ImagenProd" <<image>>
+                 class ": NombreProd" <<text>>
+                 class ": PrecioProd" <<text>>
+                 class ": Inspeccionar" <<button>>
             }
         }
         
     }
 
     ' --- PRODUCT DETAIL ---
-    rectangle "ProductDetailPage" <<presentationPage>> {
+    rectangle "PaginaDetalleProducto" <<presentationPage>> {
         
-        rectangle ": ProductInfo" <<presentationGroup>> {
-             class ": DetailImage" <<image>>
-             class ": DetailName" <<text>>
-             class ": DetailDescription" <<text>>
-             class ": DetailPrice" <<text>>
-             class ": Availability" <<text>>
+        rectangle ": InfoProducto" <<presentationGroup>> {
+             class ": ImagenDetalle" <<image>>
+             class ": NombreDetalle" <<text>>
+             class ": DescripcionDetalle" <<text>>
+             class ": PrecioDetalle" <<text>>
+             class ": Disponibilidad" <<text>>
         }
 
-        rectangle ": ActionMenu" <<presentationGroup>> {
-             class ": AddToInterest" <<button>>
-             class ": BackToList" <<button>>
+        rectangle ": MenuAcciones" <<presentationGroup>> {
+             class ": AgregarInteres" <<button>>
+             class ": VolverLista" <<button>>
         }
     }
     
     ' --- SYSTEM MESSAGES ---
-    rectangle "SystemMessages" {
-        rectangle "ConfirmationDialog" <<confirmation>> {
-            class ": ConfirmText" <<text>>
-            class ": Ok" <<button>>
-            class ": Cancel" <<button>>
+    rectangle "MensajesSistema" {
+        rectangle "DialogoConfirmacion" <<confirmation>> {
+            class ": TextoConfirmacion" <<text>>
+            class ": Aceptar" <<button>>
+            class ": Cancelar" <<button>>
         }
 
-        rectangle "ErrorDialog" <<validationError>> {
-             class ": ErrorText" <<text>>
-             class ": Retry" <<button>>
+        rectangle "DialogoError" <<validationError>> {
+             class ": TextoError" <<text>>
+             class ": Reintentar" <<button>>
         }
     }
 
@@ -122,23 +122,23 @@ package "Presentation Model" {
     ' --- NAVIGATION FLOWS (Arrows between Pages) ---
     
     ' From Home
-    ": SearchProduct" --> "ProductListPage"
-    ": Login" --> "LoginPage"
-    ": Register" --> "RegisterPage"
+    ": BuscarProducto" --> "PaginaListaProductos"
+    ": IniciarSesion" --> "PaginaLogin"
+    ": Registrarse" --> "PaginaRegistro"
     
     ' From Lists
-    ": Inspect" --> "ProductDetailPage"
+    ": Inspeccionar" --> "PaginaDetalleProducto"
     
     ' From Details
-    ": BackToList" --> "ProductListPage"
-    ": AddToInterest" ..> "ConfirmationDialog"
+    ": VolverLista" --> "PaginaListaProductos"
+    ": AgregarInteres" ..> "DialogoConfirmacion"
     
     ' From Forms
-    ": SubmitLogin" ..> "HomePage" : "Success"
-    ": SubmitLogin" ..> "ErrorDialog" : "Failure"
+    ": EnviarLogin" ..> "PaginaInicio" : "Exito"
+    ": EnviarLogin" ..> "DialogoError" : "Fallo"
     
-    ": SubmitRegister" ..> "HomePage" : "Success"
-    ": SubmitRegister" ..> "ErrorDialog" : "Failure"
+    ": EnviarRegistro" ..> "PaginaInicio" : "Exito"
+    ": EnviarRegistro" ..> "DialogoError" : "Fallo"
     
 }
 
