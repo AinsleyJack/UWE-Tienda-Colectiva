@@ -1,0 +1,145 @@
+@startuml guest_user_presentation_model
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam stereotypeCBackgroundColor #FEFECE
+skinparam stereotypeIBackgroundColor #FEFECE
+
+skinparam class {
+    BackgroundColor White
+    BorderColor #A80036
+    ArrowColor #A80036
+}
+
+skinparam rectangle {
+    BackgroundColor #FFFQE0
+    BorderColor #A80036
+}
+
+' ==========================================
+' MODELO DE PRESENTACIÓN (UWE) - GUEST USER
+' ==========================================
+
+package "Presentation Model" {
+
+    ' --- HOME PAGE ---
+    rectangle "HomePage" <<presentationPage>> {
+        
+        rectangle "Header" <<presentationGroup>> {
+            class ": Introduction" <<text>>
+        }
+
+        rectangle ": LocationForm" <<inputForm>> {
+            class ": AddressInput" <<textInput>> {
+               {autoCompletion}
+            }
+            class ": SearchLocation" <<button>>
+        }
+
+        rectangle ": SearchForm" <<inputForm>> {
+            class ": SearchCriterion" <<textInput>>
+            class ": SearchProduct" <<button>>
+        }
+
+        rectangle "AccessMenu" <<presentationGroup>> {
+            class ": Login" <<anchor>>
+            class ": Register" <<anchor>>
+        }
+    }
+
+    ' --- AUTHENTICATION ---
+    rectangle "LoginPage" <<presentationPage>> {
+        rectangle ": LoginForm" <<inputForm>> {
+            class ": Email" <<textInput>> {
+                {liveValidation}
+            }
+            class ": Password" <<textInput>>
+            class ": SubmitLogin" <<button>>
+        }
+        note right of ": LoginForm" 
+            Show error if validation fails
+        end note
+    }
+
+    rectangle "RegisterPage" <<presentationPage>> {
+        rectangle ": RegisterForm" <<inputForm>> {
+            class ": Name" <<textInput>>
+            class ": Email" <<textInput>> {
+                {liveValidation}
+            }
+            class ": Phone" <<textInput>>
+            class ": Password" <<textInput>>
+            class ": SubmitRegister" <<button>>
+        }
+    }
+
+    ' --- PRODUCT LISTING ---
+    rectangle "ProductListPage" <<presentationPage>> {
+        
+        rectangle ": ProductList" <<presentationGroup>> {
+            rectangle ": Product [*]" <<presentationGroup>> {
+                 class ": ProdImage" <<image>>
+                 class ": ProdName" <<text>>
+                 class ": ProdPrice" <<text>>
+                 class ": Inspect" <<button>>
+            }
+        }
+        
+    }
+
+    ' --- PRODUCT DETAIL ---
+    rectangle "ProductDetailPage" <<presentationPage>> {
+        
+        rectangle ": ProductInfo" <<presentationGroup>> {
+             class ": DetailImage" <<image>>
+             class ": DetailName" <<text>>
+             class ": DetailDescription" <<text>>
+             class ": DetailPrice" <<text>>
+             class ": Availability" <<text>>
+        }
+
+        rectangle ": ActionMenu" <<presentationGroup>> {
+             class ": AddToInterest" <<button>>
+             class ": BackToList" <<button>>
+        }
+    }
+    
+    ' --- SYSTEM MESSAGES ---
+    rectangle "SystemMessages" {
+        rectangle "ConfirmationDialog" <<confirmation>> {
+            class ": ConfirmText" <<text>>
+            class ": Ok" <<button>>
+            class ": Cancel" <<button>>
+        }
+
+        rectangle "ErrorDialog" <<validationError>> {
+             class ": ErrorText" <<text>>
+             class ": Retry" <<button>>
+        }
+    }
+
+
+    ' --- NAVIGATION FLOWS (Arrows between Pages) ---
+    
+    ' From Home
+    ": SearchProduct" --> "ProductListPage"
+    ": Login" --> "LoginPage"
+    ": Register" --> "RegisterPage"
+    
+    ' From Lists
+    ": Inspect" --> "ProductDetailPage"
+    
+    ' From Details
+    ": BackToList" --> "ProductListPage"
+    ": AddToInterest" ..> "ConfirmationDialog"
+    
+    ' From Forms
+    ": SubmitLogin" ..> "HomePage" : "Success"
+    ": SubmitLogin" ..> "ErrorDialog" : "Failure"
+    
+    ": SubmitRegister" ..> "HomePage" : "Success"
+    ": SubmitRegister" ..> "ErrorDialog" : "Failure"
+    
+}
+
+@enduml
