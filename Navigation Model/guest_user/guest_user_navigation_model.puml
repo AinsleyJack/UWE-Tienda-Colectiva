@@ -38,10 +38,6 @@ package "Navegación de Usuario Invitado" {
   
   ' --- 2. Acceso / Inicio de Sesión ---
   class "Menu Acceso" as AccessMenu <<menu>>
-  ' Formularios que implican procesamiento de credenciales son ProcessClasses
-  class "Proceso Login" as Login <<processClass>>
-  class "Proceso Registro" as Register <<processClass>>
-  class "Proceso Recuperación" as Recovery <<processClass>>
 
   ' --- 3. Productos (Búsqueda y Listas) ---
   class "Busqueda Productos" as ProdSearch <<query>>
@@ -80,15 +76,10 @@ package "Navegación de Usuario Invitado" {
   ' 2. Flujo de Acceso
   Home "1" --> "1" AccessMenu : <<navigationLink>>
   ' Menú -> Procesos (Process Link)
-  AccessMenu "1" --> "1" Login : <<processLink>>
-  AccessMenu "1" --> "1" Register : <<processLink>>
-  AccessMenu "1" --> "1" Recovery : <<processLink>>
-  
+
   ' Procesos -> Inicio (External Link o Process Link de retorno)
   ' El ejemplo muestra retornos como ProcessLink o flujo natural
-  Login "1" --> "1" Home : <<processLink>>
-  Register "1" --> "1" Home : <<processLink>>
-  Recovery "1" --> "1" AccessMenu : <<processLink>>
+
 
 
   ' 3. Flujo de Navegación de Productos

@@ -14,10 +14,6 @@ skinparam class {
 
 class "Usuario" as Usuario {
   + id: UUID
-  + nombre: String
-  + email: String
-  + celular: String
-  + password: String
 }
 
 class "Ubicacion" as Ubicacion {

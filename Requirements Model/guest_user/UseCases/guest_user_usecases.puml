@@ -28,12 +28,6 @@ actor "Usuario Invitado" as AnonUser
 ' ------------------------------------------
 usecase "Selección de Ubicación" as SelectLocation <<processing>>
 
-' ------------------------------------------
-' 2. GESTIÓN DE ACCESO
-' ------------------------------------------
-usecase "Ir a Login" as GoToLogin <<browsing>>
-usecase "Registrarse" as Register <<processing>>
-usecase "Recuperar contraseña" as Recover<<processing>>
 
 ' ------------------------------------------
 ' 3. NAVEGACIÓN Y BÚSQUEDA DE PRODUCTOS
@@ -64,12 +58,6 @@ usecase "Eliminar Producto Interes" as DeleteInterestProduct <<processing>>
 
 ' 1. Ubicación
 AnonUser --> SelectLocation
-
-' 2. Login y Registro
-AnonUser --> GoToLogin
-Register .> GoToLogin : <<extends>>
-AnonUser --> Register
-AnonUser --> Recover
 
 ' 3. Productos de Interés
 ' Flujo: Ver Lista -> Ver Detalle (Include) -> Eliminar (Extend)
