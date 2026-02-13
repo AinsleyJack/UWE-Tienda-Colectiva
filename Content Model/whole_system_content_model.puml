@@ -18,7 +18,7 @@ class "Usuario" as Usuario {
   + nombre: String
   + email: String
   + contraseñaHash: String
-  + rol: String  ' (ADMIN, EMPRENDEDOR, ENCARGADO, USUARIO)
+  + rol: String  ' (EMPRENDEDOR, ENCARGADO, USUARIO)
   + fechaRegistro: DateTime
   + activo: Boolean
 }
@@ -26,6 +26,10 @@ class "Usuario" as Usuario {
 class "Usuario Anónimo" as UsuarioAnonimo {
   + sessionId: String
   + preferencias: String
+  + fechaCreacion: DateTime
+  + userAgent: String ' Información del navegador/dispositivo
+  ' Nota: Usuarios anónimos NO forman parte de la tabla `Usuario` definida más arriba.
+  ' Se identifican por sessionId o token temporal; no comparten el mismo id que Usuario.
 }
 
 class "Ciudad" as Ciudad {
@@ -103,7 +107,8 @@ class "Imagen" as Imagen {
 
 class "Lista de Interés" as ListaInteres {
   + id: UUID
-  + usuarioId: UUID
+  + propietarioUsuarioId: UUID  ' nullable: FK a Usuario.id si es un usuario registrado
+  + propietarioAnonimoSessionId: String  ' nullable: sessionId si es un usuario anónimo
   + fechaCreacion: DateTime
 }
 
@@ -121,6 +126,19 @@ class "Encargado" as Encargado {
   + email: String
 }
 
+class "Administrador" as Administrador {
+  + id: UUID
+  + nombre: String
+  + nombreUsuario: String
+  + email: String
+  + contraseñaHash: String
+  + telefono: String
+  + fechaAsignacion: DateTime
+  + ultimoLogin: DateTime
+  + permisos: String  ' e.g., GESTION_CATALOGOS,GESTION_CIUDADES,SUPER
+  + activo: Boolean
+}
+
 ' =====================
 ' Relaciones y multiplicidades
 ' =====================
@@ -128,6 +146,9 @@ class "Encargado" as Encargado {
 Usuario "1" -- "0..*" Tienda : administra >
 Usuario "1" -- "0..*" Emprendimiento : crea / administra >
 UsuarioAnonimo "0..*" -- "0..*" Producto : consulta >
+
+' Relacion entre Usuario y Encargado (p.e. un usuario con rol administrativo local puede crear/gestionar encargados)
+Usuario "1" -- "0..*" Encargado : crea / gestiona >
 
 ' Tienda - Ciudad - TipoTienda
 Tienda "1" -- "0..1" Ciudad : ubicada_en >
@@ -152,15 +173,16 @@ Tienda "1" -- "0..*" Imagen : tiene >
 
 ' Listas de interes (wishlist)
 Usuario "1" -- "0..1" ListaInteres : posee >
+UsuarioAnonimo "0..1" -- "0..1" ListaInteres : posee >
 ListaInteres "1" *-- "0..*" ListaEntrada : contiene >
 ListaEntrada "*" -- "1" Producto : apunta_a >
 
 ' Notas administrativas
 ' Los administradores gestionan los catálogos de Tipos (TipoTienda, TipoProducto, TipoEmprendimiento) y Ciudades
-Usuario "1" -- "0..*" TipoProducto : gestiona >
-Usuario "1" -- "0..*" TipoEmprendimiento : gestiona >
-Usuario "1" -- "0..*" Ciudad : gestiona >
-Usuario "1" -- "0..*" TipoTienda : gestiona >
+Administrador "1" -- "0..*" TipoProducto : gestiona >
+Administrador "1" -- "0..*" TipoEmprendimiento : gestiona >
+Administrador "1" -- "0..*" Ciudad : gestiona >
+Administrador "1" -- "0..*" TipoTienda : gestiona >
 
 ' Reglas destacadas (usar en documentación):
 ' - No eliminar Tipo si existen entidades asociadas (productos, emprendimientos)
@@ -168,4 +190,3 @@ Usuario "1" -- "0..*" TipoTienda : gestiona >
 ' - Validación de stock antes de permitir venta
 
 @enduml
-
