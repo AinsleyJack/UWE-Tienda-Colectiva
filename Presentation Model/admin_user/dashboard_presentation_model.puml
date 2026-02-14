@@ -1,0 +1,58 @@
+@startuml admin_dashboard_presentation_model
+skinparam shadowing false
+skinparam roundcorner 8
+
+title "Presentación - Panel Administrador"
+
+package "Sidebar" {
+  rectangle "Menú Lateral" as Sidebar {
+    class "Panel" as Menu_Dashboard
+    class "Gestionar Catálogos" as Menu_Catalogs
+    class "Gestionar Ciudades" as Menu_Cities
+    class "Gestionar Tipos de Tienda" as Menu_StoreTypes
+    class "Gestionar Tiendas" as Menu_Stores
+    class "Gestionar Administradores" as Menu_Admins
+    class "Registros de Auditoría" as Menu_Logs
+    class "Cerrar sesión" as Menu_Logout
+  }
+}
+
+package "Main" {
+  rectangle "Área Principal" as Main {
+    rectangle "Encabezado" as MainHeader {
+      class "Bienvenida" as Welcome {
+        + "Bienvenido, Administrador"
+      }
+      class "Buscar" as Search {
+        + "campo búsqueda"
+      }
+    }
+
+    rectangle "Resumen - Cards" as Cards {
+      class "Total Tiendas" as Card_Stores {
+        + "42"
+      }
+      class "Total Productos" as Card_Products {
+        + "3.120"
+      }
+      class "Solicitudes" as Card_Requests {
+        + "7"
+      }
+    }
+
+    rectangle "Acciones Rápidas" as QuickActions {
+      class ":Crear Tipo de Producto" as Quick_Create_TipoProducto <<navigationAction>>
+      class ":Nueva Ciudad" as Quick_Create_City <<navigationAction>>
+      class ":Crear Administrador" as Quick_Create_Admin <<navigationAction>>
+    }
+
+    rectangle "Panels" as Panels {
+      class "Actividad Reciente" as RecentActivity <<displayAction>>
+      class "Alertas" as Alerts <<displayAction>>
+    }
+  }
+}
+
+Sidebar -[hidden]right-> Main
+
+@enduml

@@ -1,0 +1,53 @@
+// filepath: /home/gtinoco/repos/UWE-Tienda-Colectiva/Presentation Model/admin_user/manage_admins_presentation_model.puml
+@startuml admin_manage_admins_presentation_model
+skinparam roundcorner 8
+skinparam shadowing false
+
+title "Presentación - Gestionar Administradores"
+
+rectangle "Lista de Administradores" as AdminList {
+  class "Toolbar" as Toolbar_Admin {
+    + Buscar
+    + ":Crear Administrador" <<navigationAction>>
+  }
+
+  rectangle "Tabla Administradores" as TableAdmin {
+    class "Fila" as AdminRow {
+      + nombre
+      + nombreUsuario
+      + email
+      + permisos
+      + acciones [:Editar] [:Eliminar]
+    }
+  }
+
+  rectangle "Nota de seguridad" as SecurityNote {
+    class "Regla" as Rule {
+      + text "Sólo administradores con permiso 'SUPER' pueden EDITAR o ELIMINAR otros administradores."
+    }
+  }
+}
+
+rectangle "Modal - Editar/Crear Administrador" as ModalAdmin {
+  class "Formulario Administrador" as FormAdmin {
+    {type=modal form}
+    --
+    + nombre <<interactionPin>>
+    + nombreUsuario <<interactionPin>>
+    + email <<interactionPin>>
+    + telefono <<interactionPin>>
+    + permisos <<interactionPin>> {type=multiselect}
+    + activo <<interactionPin>> {type=checkbox}
+  }
+
+  class "Botones" as ModalButtonsAdmin {
+    class ":Guardar" as Btn_Save_Admin <<systemAction>>
+    class ":Cancelar" as Btn_Cancel_Admin <<navigationAction>>
+  }
+}
+
+' Representación simbólica de restricción de permisos
+AdminRow -down-> SecurityNote
+
+@enduml
+

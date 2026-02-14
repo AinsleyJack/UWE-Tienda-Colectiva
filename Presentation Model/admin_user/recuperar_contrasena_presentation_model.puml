@@ -1,0 +1,42 @@
+// filepath: /home/gtinoco/repos/UWE-Tienda-Colectiva/Presentation Model/admin_user/recuperar_contrasena_presentation_model.puml
+@startuml admin_recuperar_contrasena_presentation_model
+skinparam roundcorner 8
+skinparam shadowing false
+
+title "Presentación - Recuperar Contraseña (Administrador)"
+
+rectangle "Solicitud de restablecimiento" as ReqBlock {
+  class "Formulario de solicitud" as ReqForm {
+    {type=form}
+    + email <<interactionPin>>
+    + ":Enviar enlace" as Btn_Send <<navigationAction>>
+  }
+
+  class "Mensaje de confirmación" as ConfirmMsg <<displayAction>> {
+    + text "Se ha enviado un correo con instrucciones."
+  }
+}
+
+rectangle "Restablecer contraseña (desde enlace)" as ResetBlock {
+  class "Verificación de token" as TokenVerify <<systemAction>> {
+    + token
+    + valido
+  }
+
+  class "Formulario nueva contraseña" as ResetForm {
+    {type=form}
+    + nuevaPassword <<interactionPin>>
+    + confirmarPassword <<interactionPin>>
+    + ":Guardar nueva contraseña" as Btn_SavePwd <<systemAction>>
+  }
+
+  class "Mensaje de éxito" as SuccessMsg <<displayAction>> {
+    + text "Contraseña restablecida correctamente."
+  }
+}
+
+ReqBlock --> ConfirmMsg
+ResetBlock --> SuccessMsg
+
+@enduml
+

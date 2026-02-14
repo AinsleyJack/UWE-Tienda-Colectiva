@@ -1,0 +1,51 @@
+// filepath: /home/gtinoco/repos/UWE-Tienda-Colectiva/Presentation Model/admin_user/manage_catalogs_presentation_model.puml
+@startuml admin_manage_catalogs_presentation_model
+skinparam roundcorner 8
+skinparam shadowing false
+
+title "Presentación - Gestionar Catálogos (Tipos)"
+
+rectangle "Listado de Tipos de Producto" as List_TipoProducto {
+  class "Toolbar" as Toolbar {
+    + Buscar
+    + Filtros
+    + ":Crear Tipo de Producto" <<navigationAction>>
+  }
+
+  rectangle "Tabla" as Table {
+    class "Filas" as Rows {
+      + Nombre
+      + Descripción
+      + Activo
+      + Acciones [:Editar] [:Eliminar]
+    }
+  }
+}
+
+rectangle "Modal - Editar/Crear TipoProducto" as Modal_Edit {
+  class "Formulario Tipo de Producto" as FormTipo {
+    {type=modal form}
+    --
+    + nombre <<interactionPin>>
+    + descripcion <<interactionPin>>
+    + activo <<interactionPin>> {type=checkbox}
+  }
+
+  class "Botones" as ModalButtons {
+    class ":Guardar" as Btn_Save <<systemAction>>
+    class ":Cancelar" as Btn_Cancel <<navigationAction>>
+  }
+}
+
+' Aviso cuando existen entidades asociadas
+rectangle "Advertencia" as Warning {
+  class "No permitido borrar" as CannotDelete {
+    + text "No puede eliminar si existen productos asociados."
+  }
+}
+
+List_TipoProducto --> Modal_Edit : editar / crear
+Modal_Edit --> List_TipoProducto : guardar / cancelar
+
+@enduml
+

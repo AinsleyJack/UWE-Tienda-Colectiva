@@ -1,0 +1,44 @@
+@startuml admin_login_presentation_model
+skinparam shadowing false
+skinparam roundcorner 10
+
+title "Presentación - Inicio de sesión (Administrador)"
+
+rectangle "Header" as Header {
+  class "Logo" as Logo
+  class "Título" as Title {
+    + "Panel de Administración"
+  }
+}
+
+rectangle "LoginPage" as Page {
+  rectangle "Card - Formulario" as Card {
+    class "Formulario de Inicio de Sesión" as Form <<displayAction>> {
+      {type=form}
+      + email: input <<interactionPin>>
+      + contraseña: password <<interactionPin>>
+    }
+
+    rectangle "Controles" as Controls {
+      class ":Iniciar sesión" as Btn_Login <<navigationAction>> { {type=button} }
+      class ":¿Olvidó la contraseña?" as Btn_Recovery <<navigationAction>> { {type=link} }
+      class ":Cancelar" as Btn_Cancel <<navigationAction>> { {type=button} }
+    }
+
+    Form -down-> Controls
+
+    rectangle "Mensajes" as Messages {
+      class "Error de validación" as Msg_Error <<displayAction>> { + text }
+      class "Indicador de carga" as Loading <<displayAction>>
+    }
+  }
+
+  rectangle "Ayuda" as HelpBox {
+    class "Contacto soporte (opcional)" as Support
+  }
+}
+
+Footer --> Page
+
+@enduml
+
