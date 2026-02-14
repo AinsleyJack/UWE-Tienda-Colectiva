@@ -184,6 +184,16 @@ Administrador "1" -- "0..*" TipoEmprendimiento : gestiona >
 Administrador "1" -- "0..*" Ciudad : gestiona >
 Administrador "1" -- "0..*" TipoTienda : gestiona >
 
+' Relación y restricción simbólica: administración de otros administradores
+' Un administrador puede gestionar (crear/editar/eliminar) otros administradores,
+' pero simbólicamente sólo aquellos con el permiso 'SUPER' pueden editar o eliminar otros administradores.
+Administrador "1" -- "0..*" Administrador : gestiona_administradores >
+note right of Administrador
+  Restricción simbólica:
+  Sólo Administradores con permiso 'SUPER' pueden EDITAR o ELIMINAR otros Administradores.
+  (Esta es una restricción de negocio que debe aplicarse en la capa de autorización/servicios).
+end note
+
 ' Reglas destacadas (usar en documentación):
 ' - No eliminar Tipo si existen entidades asociadas (productos, emprendimientos)
 ' - No eliminar Ciudad si existen tiendas asociadas
