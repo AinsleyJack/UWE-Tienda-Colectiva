@@ -1,18 +1,16 @@
 ﻿@startuml customer_user_presentation_model
 skinparam shadow false
+skinparam roundCorner 12
 skinparam packageStyle rectangle
-skinparam roundCorner 15
-skinparam stereotypeCBackgroundColor #FEFECE
-skinparam stereotypeIBackgroundColor #FEFECE
 
 skinparam class {
-    BackgroundColor White
+    BackgroundColor #FEFECE
     BorderColor #A80036
     ArrowColor #A80036
 }
 
 skinparam rectangle {
-    BackgroundColor #FFFQE0
+    BackgroundColor #FEFECE
     BorderColor #A80036
 }
 

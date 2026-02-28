@@ -14,24 +14,11 @@ start
 
 :Boton Cambiar Ubicación pulsado;
 
-repeat :<<userAction>>\nDatos Entrada Ubicación;
-  
-  :<<systemAction>>\nValidar Ubicación;
-  
-  if (Ubicación Valida?) then (no)
-    :<<systemAction>>\nMostrar Error Ubicación;
-  else (si)
-    :<<userAction>>\nConfirmacion Ubicación;
-    
-    if (Confirmar?) then (cancelar)
-      :Cancelar;
-    else (ok)
-      :<<systemAction>>\nGuardar Ubicación;
-    endif
-  endif
+:<<displayAction>>\nLista de Ciudades;
 
-backward: Corregir Datos;
-repeat while (Reintentar)
+:<<userAction>>\nSeleccionar Ciudad;
+
+:<<systemAction>>\nGuardar Ubicación;
 stop
 @enduml
 

@@ -1,4 +1,5 @@
 @startuml shop_manager_usecases
+left to right direction
 allow_mixing
 
 skinparam shadow false

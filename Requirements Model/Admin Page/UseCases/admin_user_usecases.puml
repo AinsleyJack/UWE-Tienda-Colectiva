@@ -1,4 +1,5 @@
 @startuml adminPage_requirements
+left to right direction
 allow_mixing
 
 skinparam shadow false
