@@ -10,117 +10,122 @@ skinparam class {
 }
 
 package "Process - Encargado de Tienda" {
-
-  class "Procesos Encargado Tienda" <<process>> {
+  package "Gestion de Registros" as GestionRegistrosPackage {
+      class "Registro Tienda" as RegistroTienda <<processClass>> {
+      }
+      class "Entrada Registro Tienda" as EntradaRegistroTienda <<processClass>> {
+        -nombre : String
+        -direccion : String
+        -telefono : String
+        -horario : String
+        -foto : Image
+        --
+        -validarDatos()
+      }
+      class "Confirmacion Registro Tienda" as ConfirmacionRegistroTienda <<processClass>> {
+        -crearSolicitud()
+      }
+      class "Error Registro Tienda" as ErrorRegistroTienda <<processClass>> {
+        -message : String
+      }
   }
 
-  class "Registro Tienda" <<process>> {
+  package "Gestion de Espacios" as GestionEspaciosPackage {
+      class "Gestion Espacios" as GestionEspacios <<processClass>> {
+      }
+      class "Lista Espacios" as ListaEspacios <<processClass>> {
+      }
+      class "Crear Espacio" as CrearEspacio <<processClass>> {
+      }
+      class "Actualizar Espacio" as ActualizarEspacio <<processClass>> {
+      }
+      class "Eliminar Espacio" as EliminarEspacio <<processClass>> {
+      }
+      class "Validar Eliminacion Espacio" as ValidarEliminacionEspacio <<processClass>> {
+        -espacioId : UUID
+        --
+        -validarDependencias()
+      }
+
+      class "Asignar Espacio" as AsignarEspacio <<processClass>> {
+      }
+      class "Entrada Datos Espacio" as EntradaDatosEspacio <<processClass>> {
+        -codigo : String
+        -descripcion : String
+        -ubicacion : String
+        -estado : String
+        --
+        -validarDatos()
+      }
+      class "Entrada Asignacion Espacio" as EntradaAsignacionEspacio <<processClass>> {
+        -emprendimientoId : UUID
+        --
+        -validarAsignacion()
+      }
   }
-  class "Entrada Registro Tienda" <<process>> {
-    -nombre : String
-    -direccion : String
-    -telefono : String
-    -horario : String
-    -foto : Image
-    --
-    -validarDatos()
+
+  package "Gestion de Reportes" as GestionReportesPackage {
+      class "Generacion Reportes" as GeneracionReportes <<processClass>> {
+      }
+      class "Entrada Filtro Reporte" as EntradaFiltroReporte <<processClass>> {
+        -tipo : String
+        -fechaInicio : Date
+        -fechaFin : Date
+        -emprendimientoId : UUID
+        -tipoMovimiento : String
+        -incluirVentas : Boolean
+      }
+      class "Construccion Reporte" as ConstruccionReporte <<processClass>> {
+        -compilarDatos()
+      }
+      class "Exportar Reporte PDF" as ExportarReportePDF <<processClass>> {
+        -exportarPdf()
+      }
   }
-  class "Confirmacion Registro Tienda" <<process>> {
-    -crearSolicitud()
-  }
-  class "Error Registro Tienda" <<process>> {
+
+  package "Gestion De Inventario" as GestionInventariosPackage {
+        class "Revision Stock" as RevisionStock <<processClass>> {
+        }
+        class "Entrada Filtro Stock" as EntradaFiltroStock <<processClass>> {
+          -emprendimientoId : UUID
+          -criterio : String
+        }
+        class "Lista Stock" as ListaStock <<processClass>> {
+        }
+
+        rectangle "Registro Ventas" {
+        class "Registro Ventas" as RegistroVentas <<processClass>> {
+          }
+          class "Entrada Ventas" as EntradaVentas <<processClass>> {
+            -emprendimientoId : UUID
+            -items : String
+            --
+            -validarVenta()
+          }
+          class "Confirmacion Venta" as ConfirmacionVenta <<processClass>> {
+            -guardarVenta()
+            -reducirStock()
+          }
+
+          class "Movimiento Inventario" as MovimientoInventario <<processClass>> {
+          }
+          class "Entrada Movimiento Inventario" as EntradaMovimientoInventario <<processClass>> {
+            -productoId : UUID
+            -tipo : String
+            -cantidad : Integer
+            -motivo : String
+            --
+            -validarMovimiento()
+          }
+          class "Confirmacion Movimiento Inventario" as ConfirmacionMovimientoInventario <<processClass>> {
+            -aplicarMovimiento()
+          }
+      }
+    }
+
+  class "Error Validacion" as ErrorValidacion <<processClass>> {
     -message : String
   }
-
-  class "Gestion Espacios" <<process>> {
-  }
-  class "Lista Espacios" <<process>> {
-  }
-  class "Crear Espacio" <<process>> {
-  }
-  class "Actualizar Espacio" <<process>> {
-  }
-  class "Eliminar Espacio" <<process>> {
-  }
-  class "Asignar Espacio" <<process>> {
-  }
-  class "Entrada DatosEspacio" <<process>> {
-    -codigo : String
-    -descripcion : String
-    -ubicacion : String
-    -estado : String
-    --
-    -validarDatos()
-  }
-  class "Entrada Asignacion Espacio" <<process>> {
-    -emprendimientoId : UUID
-    --
-    -validarAsignacion()
-  }
-
-  class "Revision Stock" <<process>> {
-  }
-  class "Entrada Filtro Stock" <<process>> {
-    -emprendimientoId : UUID
-    -criterio : String
-  }
-  class "Lista Stock" <<process>> {
-  }
-
-  class "Generacion Reportes" <<process>> {
-  }
-  class "Entrada Filtro Reporte" <<process>> {
-    -tipo : String
-    -fechaInicio : Date
-    -fechaFin : Date
-    -emprendimientoId : UUID
-    -tipoMovimiento : String
-    -incluirVentas : Boolean
-  }
-  class "Construccion Reporte" <<process>> {
-    -compilarDatos()
-  }
-  class "Exportar Reporte PDF" <<process>> {
-    -exportarPdf()
-  }
-
-  class "Error Validacion" <<process>> {
-    -message : String
-  }
-
-  class "Registro Ventas" <<process>> {
-  }
-  class "Entrada Ventas" <<process>> {
-    -emprendimientoId : UUID
-    -items : String
-    --
-    -validarVenta()
-  }
-  class "Confirmacion Venta" <<process>> {
-    -guardarVenta()
-    -reducirStock()
-  }
-
-  class "Movimiento Inventario" <<process>> {
-  }
-  class "Entrada Movimiento Inventario" <<process>> {
-    -productoId : UUID
-    -tipo : String
-    -cantidad : Integer
-    -motivo : String
-    --
-    -validarMovimiento()
-  }
-  class "Confirmacion Movimiento Inventario" <<process>> {
-    -aplicarMovimiento()
-  }
-
-  ProcesosEncargadoTienda *-- RegistroTienda
-  ProcesosEncargadoTienda *-- GestionEspacios
-  ProcesosEncargadoTienda *-- RevisionStock
-  ProcesosEncargadoTienda *-- GeneracionReportes
-  ProcesosEncargadoTienda *-- RegistroVentas
-  ProcesosEncargadoTienda *-- MovimientoInventario
 
   RegistroTienda *-- EntradaRegistroTienda
   RegistroTienda *-- ConfirmacionRegistroTienda
@@ -137,6 +142,7 @@ package "Process - Encargado de Tienda" {
   AsignarEspacio *-- EntradaAsignacionEspacio
   EntradaDatosEspacio --> ErrorValidacion
   EntradaAsignacionEspacio --> ErrorValidacion
+  EliminarEspacio --> ValidarEliminacionEspacio
 
   RevisionStock *-- EntradaFiltroStock
   RevisionStock *-- ListaStock
@@ -150,9 +156,20 @@ package "Process - Encargado de Tienda" {
   RegistroVentas *-- ConfirmacionVenta
   EntradaVentas --> ErrorValidacion
 
+  RegistroVentas "1" -- "1" MovimientoInventario
+
   MovimientoInventario *-- EntradaMovimientoInventario
   MovimientoInventario *-- ConfirmacionMovimientoInventario
-  EntradaMovimientoInventario --> ErrorValidacion
+  EntradaMovimientoInventario -left-> ErrorValidacion
+
+ GestionRegistrosPackage -[hidden]right-> GestionEspaciosPackage
+ GestionEspaciosPackage -[hidden]right-> GestionReportesPackage
+ GestionReportesPackage -[hidden]left-> GestionEspaciosPackage
+
+ GestionInventariosPackage -[hidden]left-> ErrorValidacion
+ GestionRegistrosPackage -[hidden]down-> GestionInventariosPackage
+ GestionEspaciosPackage -[hidden]down-> GestionInventariosPackage
+ GestionReportesPackage -[hidden]down-> GestionInventariosPackage
+ EntradaDatosEspacio -[hidden]down-> GestionInventariosPackage
 }
 @enduml
-
