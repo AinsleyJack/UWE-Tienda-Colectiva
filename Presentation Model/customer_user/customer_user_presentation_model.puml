@@ -28,10 +28,8 @@ package "Presentation Model" {
         }
 
         rectangle ": FormularioUbicacion" <<inputForm>> {
-            class ": EntradaDireccion" <<textInput>> {
-               {autoCompletion}
-            }
-            class ": BuscarUbicacion" <<button>>
+            class ": ListaCiudades" <<selection>>
+            class ": SeleccionarUbicacion" <<button>>
         }
 
         rectangle ": FormularioBusqueda" <<inputForm>> {
