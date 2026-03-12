@@ -1,0 +1,21 @@
+@startuml admin_entrepreneurs_process_model
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+
+package "Process - Admin - Gestion de Emprendimientos" {
+  class "Listar Emprendimientos" as ListarEmp <<processClass>>
+  class "Detalle Emprendimiento" as DetalleEmp <<processClass>>
+  class "Habilitar/Deshabilitar Emprendimiento" as ToggleEmp <<processClass>>
+  class "Error Validacion" as ErrorValidacion <<processClass>>
+  class "Continuar Operación" as Continuar <<processClass>>
+  diamond "¿Confirmar cambio de estado?" as DToggle
+
+  ListarEmp *-- DetalleEmp
+  DetalleEmp *-- ToggleEmp
+  ToggleEmp --> DToggle
+  DToggle --> Continuar : Sí
+  DToggle --> ErrorValidacion : No
+}
+@enduml
+

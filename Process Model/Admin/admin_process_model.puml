@@ -1,0 +1,20 @@
+@startuml admin_process_model
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+
+package "Process - Usuario Administrador (Overview)" {
+  class "Autenticacion\n(ver: admin_auth_process_model.puml)" as Auth <<processClass>>
+  class "Gestion de Catalogos\n(ver: admin_catalogs_process_model.puml)" as Catalogs <<processClass>>
+  class "Gestion de Tiendas\n(ver: admin_shops_process_model.puml)" as Shops <<processClass>>
+  class "Gestion de Encargados\n(ver: admin_managers_process_model.puml)" as Managers <<processClass>>
+  class "Gestion de Emprendimientos\n(ver: admin_entrepreneurs_process_model.puml)" as Entrepreneurs <<processClass>>
+  class "Acciones dentro de Tiendas\n(ver: admin_shop_spaces_process_model.puml)" as Spaces <<processClass>>
+
+  Auth --> Catalogs
+  Catalogs --> Shops
+  Shops --> Managers
+  Managers --> Entrepreneurs
+  Entrepreneurs --> Spaces
+}
+@enduml

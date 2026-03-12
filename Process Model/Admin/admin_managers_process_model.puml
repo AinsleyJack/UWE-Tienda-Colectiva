@@ -1,0 +1,34 @@
+@startuml admin_managers_process_model
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+
+package "Process - Admin - Gestion de Encargados" {
+  class "Listar Encargados" as Listar <<processClass>>
+  class "Detalle Encargado" as Detalle <<processClass>>
+  class "Agregar Encargado" as Agregar <<processClass>>
+  class "Editar Encargado" as Editar <<processClass>>
+  class "Eliminar Encargado" as Eliminar <<processClass>>
+  class "Entrada Encargado" as Entrada <<processClass>>
+  class "Error Validacion" as ErrorValidacion <<processClass>>
+  class "Continuar Operación" as Continuar <<processClass>>
+  diamond "¿Datos encargado válidos?" as DEnc
+  diamond "¿Se puede eliminar?" as DDel
+
+  Listar *-- Detalle
+  Listar *-- Agregar
+  Listar *-- Eliminar
+  Detalle *-- Editar
+
+  Agregar *-- Entrada
+  Editar *-- Entrada
+  Entrada --> DEnc
+  DEnc --> Continuar : Sí
+  DEnc --> ErrorValidacion : No
+
+  Eliminar --> DDel
+  DDel --> Continuar : Sí
+  DDel --> ErrorValidacion : No
+}
+@enduml
+

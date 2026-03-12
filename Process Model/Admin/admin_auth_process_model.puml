@@ -1,0 +1,47 @@
+@startuml admin_auth_process_model
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+
+package "Process - Admin - Autenticacion" {
+  class "Inicio Flujo" as Inicio <<processClass>>
+  class "Fin Flujo" as Fin <<processClass>>
+  class "Login Admin" as Login <<processClass>>
+  class "Entrada Login" as EntradaLogin <<processClass>>
+  class "Confirmacion Login" as ConfirmLogin <<processClass>>
+  class "Recuperar Contrasena" as Recover <<processClass>>
+  class "Entrada Recuperacion" as EntradaRec <<processClass>>
+  class "Confirmacion Recuperacion" as ConfirmRec <<processClass>>
+  class "Cerrar Sesion" as Logout <<processClass>>
+  class "Error Validacion" as ErrorValidacion <<processClass>>
+  class "Notificar Error" as NotificarError <<processClass>>
+  class "Continuar Operación" as Continuar <<processClass>>
+
+  diamond "¿Credenciales válidas?" as DCred
+  diamond "¿Email recuperación válido?" as DMail
+
+  note right of DCred
+    Sí: credenciales correctas.
+    No: error y reintento.
+  end note
+
+  Inicio --> Login : Acceso administrador
+  Login --> EntradaLogin : Capturar credenciales
+  EntradaLogin --> DCred : Validar autenticación
+  DCred --> ConfirmLogin : Sí
+  DCred --> ErrorValidacion : No
+  ErrorValidacion --> NotificarError : Mostrar causa
+  NotificarError --> Login : Reintentar
+  ConfirmLogin --> Continuar : Sesión iniciada
+
+  Inicio --> Recover : ¿Olvidó contraseña?
+  Recover --> EntradaRec : Capturar email
+  EntradaRec --> DMail : Verificar formato/existencia
+  DMail --> ConfirmRec : Sí
+  DMail --> ErrorValidacion : No
+
+  Continuar --> Logout : Salida voluntaria
+  Logout --> Fin : Sesión finalizada
+}
+@enduml
+

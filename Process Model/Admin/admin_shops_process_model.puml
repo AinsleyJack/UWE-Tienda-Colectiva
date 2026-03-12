@@ -1,0 +1,38 @@
+@startuml admin_shops_process_model
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+
+package "Process - Admin - Gestion de Tiendas" {
+  class "Crear Tienda Colectiva" as CrearTienda <<processClass>>
+  class "Entrada Tienda" as EntradaTienda <<processClass>>
+  class "Confirmacion Tienda" as ConfirmacionTienda <<processClass>>
+  class "Detalle Tienda" as DetalleTienda <<processClass>>
+  class "Habilitar/Deshabilitar Tienda" as ToggleTienda <<processClass>>
+  class "Eliminar Tienda" as EliminarTienda <<processClass>>
+  class "Error Validacion" as ErrorValidacion <<processClass>>
+  class "Continuar Operación" as Continuar <<processClass>>
+
+  diamond "¿Datos tienda válidos?" as DTienda
+  diamond "¿Confirmar cambio de estado?" as DToggle
+  diamond "¿Puede eliminar tienda?" as DDelete
+
+  CrearTienda *-- EntradaTienda
+  CrearTienda *-- ConfirmacionTienda
+  EntradaTienda --> DTienda
+  DTienda --> ConfirmacionTienda : Sí
+  DTienda --> ErrorValidacion : No
+  ConfirmacionTienda --> Continuar : Guardar tienda
+
+  DetalleTienda *-- ToggleTienda
+  ToggleTienda --> DToggle
+  DToggle --> Continuar : Sí
+  DToggle --> ErrorValidacion : No
+
+  DetalleTienda *-- EliminarTienda
+  EliminarTienda --> DDelete
+  DDelete --> Continuar : Sí
+  DDelete --> ErrorValidacion : No
+}
+@enduml
+

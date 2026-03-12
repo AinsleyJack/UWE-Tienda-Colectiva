@@ -1,0 +1,55 @@
+@startuml admin_catalogs_process_model
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+
+package "Process - Admin - Gestion de Catalogos" {
+  ' ...existing code...
+
+  class "Gestion Tipos Emprendimiento" as GTE <<processClass>>
+  class "Lista Tipos Emprendimiento" as LTE <<processClass>>
+  class "Editar Tipo Emprendimiento" as ETE <<processClass>>
+  class "Entrada Tipo Emprendimiento" as InTE <<processClass>>
+
+  class "Gestion Tipos Producto" as GTP <<processClass>>
+  class "Lista Tipos Producto" as LTP <<processClass>>
+  class "Editar Tipo Producto" as ETP <<processClass>>
+  class "Entrada Tipo Producto" as InTP <<processClass>>
+
+  class "Gestion Ciudades" as GC <<processClass>>
+  class "Lista Ciudades" as LC <<processClass>>
+  class "Editar Ciudad" as EC <<processClass>>
+  class "Eliminar Ciudad" as DC <<processClass>>
+  class "Entrada Ciudad" as InC <<processClass>>
+  class "Validar Eliminacion Ciudad" as VEC <<processClass>>
+
+  class "Error Validacion" as ErrorValidacion <<processClass>>
+  class "Continuar Operación" as Continuar <<processClass>>
+
+  diamond "¿Datos catálogo válidos?" as DCat
+  diamond "¿Ciudad con dependencias?" as DDep
+
+  GTE *-- LTE
+  GTE *-- ETE
+  ETE *-- InTE
+  InTE --> DCat
+  DCat --> Continuar : Sí
+  DCat --> ErrorValidacion : No
+
+  GTP *-- LTP
+  GTP *-- ETP
+  ETP *-- InTP
+  InTP --> DCat
+
+  GC *-- LC
+  GC *-- EC
+  GC *-- DC
+  EC *-- InC
+  InC --> DCat
+  DC *-- VEC
+  VEC --> DDep : Validar referencias
+  DDep --> ErrorValidacion : Sí, en uso
+  DDep --> Continuar : No, permitido
+}
+@enduml
+
